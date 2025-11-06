@@ -8,3 +8,7 @@ data_ingestion/cleaners/__pycache__/case_cleaner.cpython-313.pyc
 data/__pycache__/__init__.cpython-313.pyc
 data/__pycache__/database.cpython-313.pyc
 data/__pycache__/models.cpython-313.pyc
+cli/__pycache__/ingest.cpython-313.pyc
+cli/__pycache__/__init__.cpython-313.pyc
+cli/__pycache__/report.cpython-313.pyc
+cli/__pycache__/search.cpython-313.pyc
