@@ -12,3 +12,4 @@ cli/__pycache__/ingest.cpython-313.pyc
 cli/__pycache__/__init__.cpython-313.pyc
 cli/__pycache__/report.cpython-313.pyc
 cli/__pycache__/search.cpython-313.pyc
+agent/__pycache__/llm_utils.cpython-313.pyc
