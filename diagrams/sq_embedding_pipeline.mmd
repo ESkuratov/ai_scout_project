@@ -1,0 +1,29 @@
+sequenceDiagram
+    participant User/Scheduler
+    participant CLI as CLI (ingest.py)
+    participant PostgresLoader as Postgres Loader (postgres_loader.py)
+    participant CaseCleaner as Case Cleaner (case_cleaner.py)
+    participant TextSplitter as Text Splitter (text_splitter.py)
+    participant EmbeddingModel as Embedding Model (embedding_model.py)
+    participant QdrantClient as Qdrant (qdrant_client.py)
+
+    User/Scheduler->>CLI: Triggers ingestion (e.g., ingest.py)
+    CLI->>PostgresLoader: load_cases()
+    PostgresLoader-->>CLI: raw_cases_data (from DB)
+
+    CLI->>CaseCleaner: clean_and_deduplicate(raw_cases_data)
+    CaseCleaner-->>CLI: cleaned_cases_data (list of Case objects)
+
+    loop For each Case object in cleaned_cases_data
+        CLI->>TextSplitter: split_into_chunks(case.text_fields)
+        TextSplitter-->>CLI: text_chunks (list of strings)
+
+        loop For each text_chunk
+            CLI->>EmbeddingModel: encode(text_chunk)
+            EmbeddingModel-->>CLI: chunk_vector
+            CLI->>QdrantClient: upsert_vector(chunk_vector, payload={case_id, chunk_id, etc.})
+        end
+    end
+
+    QdrantClient-->>CLI: Confirmation/Status
+    CLI-->>User/Scheduler: Ingestion Complete

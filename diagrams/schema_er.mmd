@@ -1,0 +1,86 @@
+erDiagram
+    REGIONS {
+        int region_id PK
+        text name
+        text description
+    }
+
+    SECTORS {
+        int sector_id PK
+        text name
+        text description
+    }
+
+    TECHNOLOGY_DRIVERS {
+        int driver_id PK
+        text name
+        text description
+    }
+
+    PILOT_MATURITY_LEVELS {
+        int level_id PK
+        text code
+        text description
+    }
+
+    IMPLEMENTATION_STATUSES {
+        int status_id PK
+        text code
+        text description
+    }
+
+    COMPANIES {
+        int company_id PK
+        text name
+        text description
+        text headquarters
+    }
+
+    SOURCES {
+        int source_id PK
+        text title
+        text url
+        text publisher
+        date published_at
+    }
+
+    CASES {
+        int case_id PK
+        int region_id FK
+        int sector_id FK
+        int company_id FK
+        int implementation_status_id FK
+        text title
+        text summary
+        text detailed_notes
+        text key_effect_note
+        int maturity_level FK
+        timestamp created_at
+        int source_id FK
+    }
+
+    CASE_TECHNOLOGY_DRIVERS {
+        int case_id FK
+        int driver_id FK
+    }
+
+    ECONOMIC_EFFECTS {
+        int effect_id PK
+        int case_id FK
+        text effect_type
+        numeric value_numeric
+        text currency
+        text period_note
+    }
+
+    REGIONS ||--o{ CASES : "hosts"
+    SECTORS ||--o{ CASES : "includes"
+    COMPANIES ||--o{ CASES : "belongs to"
+    IMPLEMENTATION_STATUSES ||--o{ CASES : "status"
+    PILOT_MATURITY_LEVELS ||--o{ CASES : "maturity"
+    SOURCES ||--o{ CASES : "documented by"
+
+    CASES ||--o{ CASE_TECHNOLOGY_DRIVERS : "links"
+    TECHNOLOGY_DRIVERS }o--o{ CASE_TECHNOLOGY_DRIVERS : "applies"
+
+    CASES ||--o{ ECONOMIC_EFFECTS : "documented effects"

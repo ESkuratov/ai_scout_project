@@ -1,0 +1,30 @@
+sequenceDiagram
+    participant User
+    participant CLI as CLI (search.py)
+    participant Retriever as Retriever (retriever.py)
+    participant EmbeddingModel as Embedding Model (embedding_model.py)
+    participant QdrantClient as Qdrant (qdrant_client.py)
+    participant Formatter as Formatter (formatter.py)
+    participant Generator as Generator (generator.py)
+    participant LLM as LLM API
+
+    User->>CLI: Вводит поисковый запрос (text_query)
+    CLI->>Retriever: search(text_query, filters)
+
+    Retriever->>EmbeddingModel: encode(text_query)
+    EmbeddingModel-->>Retriever: query_vector
+
+    Retriever->>QdrantClient: search_vectors(query_vector, filters, top_k)
+    QdrantClient-->>Retriever: relevant_chunks (text, metadata)
+
+    Retriever-->>CLI: relevant_chunks
+
+    CLI->>Formatter: format_context(relevant_chunks, text_query)
+    Formatter-->>CLI: formatted_context (prompt)
+
+    CLI->>Generator: generate_response(formatted_context)
+    Generator->>LLM: send_prompt(formatted_context)
+    LLM-->>Generator: generated_text_response
+    Generator-->>CLI: final_response
+
+    CLI-->>User: Отображает final_response

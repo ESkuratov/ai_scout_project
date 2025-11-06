@@ -1,0 +1,90 @@
+graph TB
+    subgraph "External Interfaces"
+        User[User/Scheduler]
+        LLM[LLM API]
+    end
+
+    subgraph "CLI Layer"
+        IngestCLI[ingest.py]
+        SearchCLI[search.py]
+        AgentCLI[Agent Interface]
+    end
+
+    subgraph "Embedding Pipeline"
+        direction TB
+        EP_Loader[Postgres Loader]
+        EP_Cleaner[Case Cleaner]
+        EP_Splitter[Text Splitter]
+        EP_Embedding[Embedding Model]
+        EP_QdrantClient[Qdrant Client - Write]
+        
+        EP_Loader --> EP_Cleaner
+        EP_Cleaner --> EP_Splitter
+        EP_Splitter --> EP_Embedding
+        EP_Embedding --> EP_QdrantClient
+    end
+
+    subgraph "RAG Pipeline"
+        direction TB
+        RAG_Retriever[Retriever]
+        RAG_Embedding[Embedding Model]
+        RAG_QdrantClient[Qdrant Client - Read]
+        RAG_Formatter[Context Formatter]
+        RAG_Generator[Response Generator]
+        
+        RAG_Retriever --> RAG_Embedding
+        RAG_Retriever --> RAG_QdrantClient
+        RAG_Retriever --> RAG_Formatter
+        RAG_Formatter --> RAG_Generator
+    end
+
+    subgraph "Agent System"
+        AgentNode[Agent Node]
+        ToolsNode[Tools Node]
+        Router{Route Model Output}
+        
+        AgentNode --> Router
+        Router -->|Tool Calls| ToolsNode
+        ToolsNode --> AgentNode
+    end
+
+    subgraph "Storage Layer"
+        PostgresDB[(PostgreSQL Database)]
+        QdrantDB[(Qdrant Vector DB)]
+    end
+
+    %% Embedding Pipeline Connections
+    User -->|Trigger Ingestion| IngestCLI
+    IngestCLI --> EP_Loader
+    EP_Loader --> PostgresDB
+    EP_QdrantClient --> QdrantDB
+
+    %% RAG Pipeline Connections
+    User -->|Search Query| SearchCLI
+    SearchCLI --> RAG_Retriever
+    RAG_QdrantClient --> QdrantDB
+    RAG_Generator --> LLM
+    RAG_Generator -->|Response| User
+
+    %% Agent Connections
+    User -->|Interact| AgentCLI
+    AgentCLI --> AgentNode
+    Router -->|No Tools| User
+    AgentNode --> LLM
+    ToolsNode -.->|Use RAG| RAG_Retriever
+    ToolsNode -.->|Access Data| PostgresDB
+
+    %% Styling
+    classDef storage fill:#e1f5ff,stroke:#0288d1,stroke-width:2px
+    classDef embeddingPipeline fill:#fff3e0,stroke:#f57c00,stroke-width:3px
+    classDef ragPipeline fill:#e8f5e9,stroke:#388e3c,stroke-width:3px
+    classDef agent fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef external fill:#ffebee,stroke:#c62828,stroke-width:2px
+    classDef cli fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+
+    class PostgresDB,QdrantDB storage
+    class EP_Loader,EP_Cleaner,EP_Splitter,EP_Embedding,EP_QdrantClient embeddingPipeline
+    class RAG_Retriever,RAG_Embedding,RAG_QdrantClient,RAG_Formatter,RAG_Generator ragPipeline
+    class AgentNode,ToolsNode,Router agent
+    class User,LLM external
+    class IngestCLI,SearchCLI,AgentCLI cli
