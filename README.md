@@ -1,4 +1,4 @@
-# ai_scout_project# AI Scout Project
+# AI Scout Project
 
 AI Scout is an intelligent system for ingesting, indexing, and querying case studies from a PostgreSQL database using vector embeddings and RAG (Retrieval-Augmented Generation) technology. The system features an AI agent interface for natural language interaction with the data.
 
