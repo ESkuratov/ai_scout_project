@@ -5,3 +5,6 @@ embeddings/chunkers/__pycache__/text_splitter.cpython-313.pyc
 data_ingestion/__pycache__/__init__.cpython-313.pyc
 data_ingestion/__pycache__/postgres_loader.cpython-313.pyc
 data_ingestion/cleaners/__pycache__/case_cleaner.cpython-313.pyc
+data/__pycache__/__init__.cpython-313.pyc
+data/__pycache__/database.cpython-313.pyc
+data/__pycache__/models.cpython-313.pyc
