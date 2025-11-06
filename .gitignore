@@ -2,3 +2,6 @@
 embeddings/pipelines/__pycache__/embedding_pipeline.cpython-313.pyc
 embeddings/models/__pycache__/embedding_model.cpython-313.pyc
 embeddings/chunkers/__pycache__/text_splitter.cpython-313.pyc
+data_ingestion/__pycache__/__init__.cpython-313.pyc
+data_ingestion/__pycache__/postgres_loader.cpython-313.pyc
+data_ingestion/cleaners/__pycache__/case_cleaner.cpython-313.pyc
