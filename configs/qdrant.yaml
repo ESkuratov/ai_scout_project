@@ -1,0 +1,6 @@
+# ai-scout-project/src/configs/qdrant.yaml
+qdrant:
+  host: "localhost"
+  port: 6333
+  collection_name: "ai_cases"
+  api_key: null # Или используйте переменную окружения 

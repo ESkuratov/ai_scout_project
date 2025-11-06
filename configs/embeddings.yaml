@@ -1,0 +1,9 @@
+# Configuration for the embedding model to be used
+embedding_model:
+  type: "hf" # or "openrouter_openai"
+  model_name: "sentence-transformers/paraphrase-multilingual-mpnet-base-v2"
+  chunk_size: 500 # Добавлено: передача для TextSplitter
+  chunk_overlap: 100 # Добавлено: передача для TextSplitter
+  # If using openrouter_openai, uncomment and configure these:
+  # api_key_env: "OPENROUTER_API_KEY" # Environment variable name for the API key
+  # base_url: "https://openrouter.ai/api/v1" # Optional, defaults to OpenRouter base URL
